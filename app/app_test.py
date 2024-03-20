@@ -44,7 +44,7 @@ def sample_data(app):
         db.session.commit()
 
 def test_json_response_contract(client, sample_data):
-    response = client.get("/producers/intervals")
+    response = client.get("/producers/worsts")
     
     assert response.status_code == 200
     
@@ -65,7 +65,7 @@ def test_json_response_contract(client, sample_data):
             assert key in item
 
 def test_producers_intervals(client, sample_data):
-    json_data = client.get("/producers/intervals").json
+    json_data = client.get("/producers/worsts").json
 
     assert len(json_data['max']) == 1
     assert json_data['max'][0]['producer'] == "Producer One"
@@ -81,7 +81,7 @@ def test_producers_intervals(client, sample_data):
 
 
 def test_import_data_without_body(client, sample_data):
-    response = client.post("/import-data")
+    response = client.put("/movies/import")
     
     status_code = response.status_code
     assert status_code == 400
@@ -92,7 +92,7 @@ def test_import_data_without_body(client, sample_data):
 
 
 def test_import_data_with_correct_data(client, sample_data):
-    response = client.post("/import-data", json={ "file_path_or_url": "../data/movielist.csv" })
+    response = client.put("/movies/import", json={ "file_path_or_url": "../data/movielist.csv" })
     
     status_code = response.status_code
     assert status_code == 200

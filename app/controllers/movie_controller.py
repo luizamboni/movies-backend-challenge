@@ -3,7 +3,7 @@ from services.movie_service import get_producers_intervals, import_csv_to_databa
 from werkzeug.exceptions import BadRequest
 movie_blueprint = Blueprint('movies', __name__)
 
-@movie_blueprint.route('/import-data', methods=['PUT'])
+@movie_blueprint.route('/movies/import', methods=['PUT'])
 def import_data():
     try:
         data = request.json
@@ -17,7 +17,7 @@ def import_data():
         # print(type(e))
         return jsonify({'status': 'failed', "reason": str(e) }), 500
 
-@movie_blueprint.route('/producers/intervals', methods=['GET'])
+@movie_blueprint.route('/producers/worsts', methods=['GET'])
 def get_intervals():
     intervals = get_producers_intervals()
     return jsonify(intervals), 200
