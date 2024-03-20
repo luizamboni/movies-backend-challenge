@@ -1,6 +1,6 @@
 from flask import Flask
 from models.movie import db
-from controllers.movie_controller import movie_blueprint
+from controllers import movie_blueprint, producer_blueprint
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -12,6 +12,7 @@ def create_app(test_config=None):
     
     db.init_app(app)
     app.register_blueprint(movie_blueprint)
+    app.register_blueprint(producer_blueprint)
     return app
 
 if __name__ == '__main__':

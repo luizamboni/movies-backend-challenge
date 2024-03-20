@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
-from services.movie_service import get_producers_intervals, import_csv_to_database
+from services.movie_service import import_csv_to_database
 from werkzeug.exceptions import BadRequest
+
 movie_blueprint = Blueprint('movies', __name__)
 
 @movie_blueprint.route('/movies/import', methods=['PUT'])
@@ -16,8 +17,3 @@ def import_data():
     except Exception as e:
         # print(type(e))
         return jsonify({'status': 'failed', "reason": str(e) }), 500
-
-@movie_blueprint.route('/producers/worsts', methods=['GET'])
-def get_intervals():
-    intervals = get_producers_intervals()
-    return jsonify(intervals), 200
