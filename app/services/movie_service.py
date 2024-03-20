@@ -48,15 +48,23 @@ def import_csv_to_database(file_path_or_url: str) -> None:
                 studio = Studio(name=name)
                 db.session.add(studio)
             studios.append(studio)
-        
-        new_movie = Movie(
-            title=row['title'],
-            year=row['year'],
-            winner=row['winner'],
-            producers=producers,
-            studios=studios
-        )
-        db.session.add(new_movie)
+
+        movie = Movie.query.filter_by(title=row['title'], year=row['year']).first()
+        if movie:
+            movie.winner=row['winner']
+            movie.producers = producers
+            movie.studios = studios
+
+            db.session.add(movie)
+        else:
+            movie = Movie(
+                title=row['title'],
+                year=row['year'],
+                winner=row['winner'],
+                producers=producers,
+                studios=studios
+            )
+            db.session.add(movie)
     
     db.session.commit()
 
