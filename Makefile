@@ -3,9 +3,9 @@ start:
 	cd app && python app.py
 
 import:
-	curl -i -X POST \
+	curl -i -X PUT \
 		-H "Content-Type: application/json" \
-		-d '{"file_path_or_url": "$(shell pwd)/data/movielisst.csv"}' \
+		-d '{"file_path_or_url": "$(shell pwd)/data/movielist.csv"}' \
 		'http://localhost:5000/import-data'
 
 producers:
