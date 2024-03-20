@@ -91,7 +91,7 @@ def test_import_data_without_body(client, sample_data):
     assert json_data['reason'] == '400 Bad Request: The browser (or proxy) sent a request that this server could not understand.'
 
 
-def test_import_data_with_correct_data(client, sample_data):
+def test_import_data_with_correct_data(client):
     response = client.put("/movies/import", json={ "file_path_or_url": "../data/movielist.csv" })
     
     status_code = response.status_code
@@ -99,3 +99,50 @@ def test_import_data_with_correct_data(client, sample_data):
 
     json_data = response.json
     assert json_data['status'] == 'succeeded'
+
+
+def test_import_data_indepotence(app, client):
+    with app.app_context():
+
+        response = client.put("/movies/import", json={ "file_path_or_url": "../data/movielist.csv" })
+        
+        status_code = response.status_code
+        assert status_code == 200
+        
+        for row in db.engine.execute("SELECT count(1) cnt FROM movie"):
+            movie_count = row.cnt
+
+        for row in db.engine.execute("SELECT count(1) cnt FROM producer"):
+            producer_count = row.cnt
+
+        for row in db.engine.execute("SELECT count(1) cnt FROM studio"):
+            studio_cnt = row.cnt
+
+        for row in db.engine.execute("SELECT count(1) cnt FROM movie_studio"):
+            movie_studio = row.cnt
+
+        for row in db.engine.execute("SELECT count(1) cnt FROM movie_producer"):
+            movie_producer = row.cnt
+
+        # importing again
+        response = client.put("/movies/import", json={ "file_path_or_url": "../data/movielist.csv" })
+        
+        status_code = response.status_code
+        assert status_code == 200
+    
+        for row in db.engine.execute("SELECT count(1) cnt FROM movie"):
+            assert movie_count == row.cnt
+
+        for row in db.engine.execute("SELECT count(1) cnt FROM producer"):
+            assert producer_count == row.cnt
+
+        for row in db.engine.execute("SELECT count(1) cnt FROM studio"):
+            assert studio_cnt == row.cnt
+
+        for row in db.engine.execute("SELECT count(1) cnt FROM movie_studio"):
+            assert movie_studio == row.cnt
+
+        for row in db.engine.execute("SELECT count(1) cnt FROM movie_producer"):
+            assert movie_producer == row.cnt 
+
+        

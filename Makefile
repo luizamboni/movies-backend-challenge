@@ -1,4 +1,3 @@
-# APP_HOST=192.168.65.3
 APP_HOST=localhost
 
 build-image:
@@ -11,10 +10,17 @@ run-image:
 		-v $(shell pwd)/data/:/data/ \
 		movies
 
-start:
+run-tests-in-image:
+	docker run \
+		--rm \
+		-v $(shell pwd)/data/:/data/ \
+		movies \
+		pytest
+
+dev:
 	cd app && python app.py
 
-import:
+import-movies:
 	curl -i -X PUT \
 		-H "Content-Type: application/json" \
 		-d '{"file_path_or_url": "/data/movielist.csv"}' \
@@ -22,9 +28,3 @@ import:
 
 get_worst_producers:
 	curl -i 'http://${APP_HOST}:5000/producers/worsts'
-
-dev:
-	cd app && python dev.py
-
-test:
-	cd app && pytest ../.
