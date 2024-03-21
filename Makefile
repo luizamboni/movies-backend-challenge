@@ -17,9 +17,6 @@ run-tests-in-image:
 		movies \
 		pytest
 
-dev:
-	cd app && python app.py
-
 import-movies:
 	curl -i -X PUT \
 		-H "Content-Type: application/json" \
@@ -28,3 +25,6 @@ import-movies:
 
 get_worst_producers:
 	curl -i 'http://${APP_HOST}:5000/producers/worsts'
+
+dev:
+	cd app && python app.py
